@@ -259,7 +259,7 @@ export default function Home() {
                   <h4 className="font-medium text-white">Recommended Vault</h4>
                   <p className="text-[10px] text-[#8b949e]">Take total control of your private keys.</p>
                 </div>
-                <a href="https://www.ledger.com" target="_blank" rel="noopener noreferrer" className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold text-[11px] px-3 py-1.5 rounded hover:bg-emerald-500 hover:text-black transition-all">
+                <a href="https://shop.ledger.com/?r=344d1075931d" target="_blank" rel="noopener noreferrer" className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold text-[11px] px-3 py-1.5 rounded hover:bg-emerald-500 hover:text-black transition-all">
                   Get Ledger 🔗
                 </a>
               </div>
