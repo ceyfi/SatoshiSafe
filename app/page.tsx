@@ -290,7 +290,7 @@ export default function Home() {
             <div className="mt-4 pt-3 border-t border-[#21262d] space-y-2">
               <div className="flex justify-between items-center p-2.5 bg-[#0d1117] rounded border border-[#21262d] text-[11px]">
                 <span className="text-[#8b949e]">🔥 Fireproof Metal Backup:</span>
-                <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline font-medium">Cryptotag Steel 🔗</a>
+                <a href="https://keyst.one/?rfsn=9116030.71461e&utm_source=refersion&utm_medium=affiliate&utm_campaign=9116030.71461e" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline font-medium">Keystone Tablet🔗</a>
               </div>
               <div className="flex justify-between items-center p-2.5 bg-[#0d1117] rounded border border-[#21262d] text-[11px]">
                 <span className="text-[#8b949e]">🔒 Privacy Layer (No IP Leak):</span>
