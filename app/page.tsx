@@ -39,10 +39,10 @@ export default function Home() {
   const [cryptoData, setCryptoData] = useState<any>(null);
   const [newsData, setNewsData] = useState<any[]>([]);
   
-  // Form inputs
-  const [exchange, setExchange] = useState('');
-  const [amount, setAmount] = useState('');
-  const [hasBackup, setHasBackup] = useState('yes');
+  // Varijable forme usklađene sa API-jem
+  const [walletType, setWalletType] = useState('exchange');
+  const [backupMethod, setBackupMethod] = useState('paper');
+  const [antivirus, setAntivirus] = useState('no');
   
   const [auditResult, setAuditResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -60,13 +60,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Fetch price and sentiment from your API
+    // Fetch price and sentiment
     fetch('/api/crypto')
       .then(res => res.json())
       .then(data => setCryptoData(data))
       .catch(() => setCryptoData({ price: 78247, fgi: 31, status: "Fear", verdict: "STABLE", advice: "Data protected." }));
 
-    // Bulletproof News Fetching via open RSS-to-JSON
+    // News Fetching
     fetch('https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss/tag/bitcoin')
       .then(res => res.json())
       .then(data => {
@@ -81,7 +81,6 @@ export default function Home() {
         }
       })
       .catch(() => {
-        // Fallback vesti ako internet zašteka
         setNewsData([
           { id: 1, title: "Securing Bitcoin Holdings Ahead of Market Volatility", url: "#", source: "SATOSHI//SAFE" },
           { id: 2, title: "Why Hardware Wallets Remain the Only Standard for Self-Custody", url: "#", source: "INTEL" }
@@ -98,7 +97,7 @@ export default function Home() {
       const res = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exchange, amount, hasBackup }),
+        body: JSON.stringify({ walletType, backupMethod, antivirus }),
       });
       if (!res.ok) throw new Error("Audit failed");
       const aiResponse = await res.json();
@@ -164,46 +163,44 @@ export default function Home() {
             <h3 className="text-md font-semibold mb-4 text-white uppercase tracking-wider text-sm text-emerald-400">AI Security Scanner</h3>
             <form onSubmit={handleAuditSubmit} className="space-y-4">
               <div>
-                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">Where do you store your Bitcoin?</label>
+                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">Where do you currently store your primary crypto assets?</label>
                 <select 
-                  value={exchange} 
-                  onChange={(e) => setExchange(e.target.value)}
-                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                  value={walletType} 
+                  onChange={(e) => setWalletType(e.target.value)}
+                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono"
                   disabled={loading}
-                  required
                 >
-                  <option value="">-- Select storage option --</option>
-                  <option value="binance">Binance Exchange</option>
-                  <option value="bybit">Bybit Exchange</option>
-                  <option value="software">Software / Mobile Wallet</option>
-                  <option value="cold">Hardware Cold Wallet</option>
+                  <option value="exchange">Crypto Exchange (Binance, Coinbase, Nexo...)</option>
+                  <option value="software">Software Wallet App (Metamask, TrustWallet)</option>
+                  <option value="hardware">Hardware Wallet (Ledger, Trezor, Keystone)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">Estimated Balance (BTC Amount)</label>
-                <input 
-                  type="number" 
-                  step="any"
-                  placeholder="0.25"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">How is your 12/24 recovery seed phrase backed up?</label>
+                <select 
+                  value={backupMethod} 
+                  onChange={(e) => setBackupMethod(e.target.value)}
+                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono"
                   disabled={loading}
-                  required
-                />
+                >
+                  <option value="paper">Written on a standard piece of paper</option>
+                  <option value="digital">Saved digitally (Photo, Notepad, Cloud, Email)</option>
+                  <option value="metal">Stamped into a Stainless Steel plate</option>
+                  <option value="none">I don't have it / I don't remember where it is</option>
+                </select>
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">Do you have an offline backup?</label>
+                <label className="block text-[11px] text-[#8b949e] uppercase mb-1">Do you routinely check devices with premium antivirus/VPN setups?</label>
                 <select 
-                  value={hasBackup} 
-                  onChange={(e) => setHasBackup(e.target.value)}
-                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                  value={antivirus} 
+                  onChange={(e) => setAntivirus(e.target.value)}
+                  className="w-full bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono"
                   disabled={loading}
                 >
-                  <option value="yes">Yes, securely on paper or steel offline</option>
-                  <option value="no">No / Stored digitally or not backed up</option>
+                  <option value="no">No, I just use default network settings</option>
+                  <option value="yes">Yes, active paid premium guard software</option>
                 </select>
               </div>
 
@@ -239,9 +236,23 @@ export default function Home() {
                       'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     }`}>{auditResult.verdict} ({auditResult.score}/100)</span>
                   </div>
-                  <p className="text-xs text-[#8b949e] bg-[#0d1117] p-3 rounded border border-[#21262d] leading-relaxed">
+                  <p className="text-xs text-[#8b949e] bg-[#0d1117] p-3 rounded border border-[#21262d] leading-relaxed whitespace-pre-line font-mono">
                     {auditResult.advice}
                   </p>
+                  
+                  {/* SIGURNO DUGME ZA DELJENJE NA X BEZ SVG-ova */}
+                  <div className="pt-2 flex justify-center">
+                    <a 
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                        `Just scanned my Bitcoin security setup on SatoshiSafe – scored ${auditResult.score}/100 😬 Threat Level: ${auditResult.verdict}. Scan your vault at https://satoshi-safe.vercel.app/`
+                      )}`}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full text-center bg-white text-black font-bold text-[11px] tracking-wide py-2 rounded hover:bg-neutral-200 transition-all font-mono"
+                    >
+                      Share Score on X 🔗
+                    </a>
+                  </div>
                 </div>
               )}
 
@@ -252,7 +263,7 @@ export default function Home() {
               )}
             </div>
 
-            {/* MONETIZACIJA 1: HARDWARE WALLET */}
+            {/* MONETIZACIJA 1 */}
             <div className="mt-4 pt-3 border-t border-[#21262d]">
               <div className="flex justify-between items-center p-3 bg-[#0d1117] rounded border border-dashed border-emerald-500/20 text-xs">
                 <div>
@@ -266,7 +277,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* COL 3: SECURITY TASKS + MONETIZACIJA 2 & 3 */}
+          {/* COL 3: SECURITY TASKS */}
           <div className="bg-[#161b22] p-6 rounded-xl border border-[#21262d] lg:col-span-1 flex flex-col justify-between">
             <div>
               <h3 className="text-md font-semibold mb-4 text-white uppercase tracking-wider text-sm text-amber-400">Security Checklist</h3>
@@ -286,7 +297,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* NOVI MONETIZACIONI LINKOVI (VPN i Steel Storage) */}
             <div className="mt-4 pt-3 border-t border-[#21262d] space-y-2">
               <div className="flex justify-between items-center p-2.5 bg-[#0d1117] rounded border border-[#21262d] text-[11px]">
                 <span className="text-[#8b949e]">🔥 Fireproof Metal Backup:</span>
@@ -304,20 +314,17 @@ export default function Home() {
         {/* BOTTOM SECTION: CHART & NEWS */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* LIVE CHART + AD SENSE SLOT */}
           <div className="bg-[#161b22] p-4 rounded-xl border border-[#21262d] lg:col-span-2 space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> BTC/USDT Market Structure
             </h3>
             <TradingViewWidget />
             
-            {/* MONETIZACIJA 4: ADSENSE / BANNER SLOT */}
             <div className="w-full h-14 bg-[#0d1117] rounded-lg border border-dashed border-[#30363d] flex items-center justify-center text-xs text-[#8b949e] tracking-wider">
               [ ADVERTISEMENT BANNER / GOOGLE ADSENSE SLOT ]
             </div>
           </div>
 
-          {/* GLOBAL NEWS FEED */}
           <div className="bg-[#161b22] p-5 rounded-xl border border-[#21262d] lg:col-span-1">
             <h3 className="text-sm font-semibold mb-4 text-white uppercase tracking-wider text-rose-400">Global Cyber News Feed</h3>
             <div className="space-y-3 max-h-[440px] overflow-y-auto pr-1">
